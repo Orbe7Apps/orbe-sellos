@@ -36,7 +36,7 @@ Cada cambio en `main` se publica solo en GitHub Pages (`.github/workflows/public
 - Todo en español y con el estilo de Orbe.
 - Lo más simple posible: sin app, sin registro, sin contraseñas.
 - El cliente nunca puede sellarse solo: sellar, entregar premios y deshacer piden la clave del negocio.
-- Los correos y los datos de usuarios registrados van solo en Supabase, nunca en Notion.
+- Los correos, los datos de usuarios registrados y el nombre, WhatsApp y cumpleaños del cliente van solo en Supabase, nunca en Notion.
 - Antes de un cambio grande de diseño, primero una maqueta.
 
 Plan maestro en Notion: «Orbe Sellos — Plan maestro», dentro de «Productos y apps».

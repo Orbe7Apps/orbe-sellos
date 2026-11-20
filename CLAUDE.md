@@ -6,6 +6,7 @@
 - El cliente nunca puede sellarse solo. Sellar, entregar premios y deshacer piden la clave del negocio.
 - **Base de datos: por decidir; la decide Guillermo.** Hoy la app está en modo demostración (`js/datos.js`).
   - Los correos y los datos de usuarios registrados van solo en Supabase, nunca en Notion.
+  - El nombre, el WhatsApp y el cumpleaños del cliente también van solo en Supabase.
   - Notion como base de la app solo si Guillermo lo indica, y solo con información de la app.
 - Antes de un cambio grande de diseño, primero una maqueta.
 - Al avanzar, actualiza el plan maestro y la base «Pendientes» de Notion (tareas que empiezan con «Orbe Sellos:»).

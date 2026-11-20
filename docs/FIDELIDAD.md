@@ -125,7 +125,7 @@ Después imprime el cartel o comparte el enlace.
   - **Regla:** los correos y los datos de los usuarios registrados van solo en **Supabase**, nunca en Notion. Si Notion se usa, guarda solo información de la app (programas, tarjetas, sellos, premios).
   - Notion como base de la app solo si Guillermo lo indica.
   - El esquema de Supabase ya está en `supabase/esquema.sql` (sin probar en una base real). Para conectarlo se pegan la URL y la clave pública en `js/config.js`.
-  - Pendiente de decidir: dónde van el nombre, el WhatsApp y el cumpleaños opcionales del cliente (lo recomendado: con los demás datos personales, en Supabase).
+  - **Decidido (20 nov 2026):** el nombre, el WhatsApp y el cumpleaños opcionales del cliente van en **Supabase**, con los demás datos personales (tabla `sellos_tarjetas` de `supabase/esquema.sql`; el WhatsApp y el cumpleaños solo los ve el negocio con su clave). Nunca en Notion.
 - **Fase 2: Apple Wallet y Google Wallet.**
   - Necesita una cuenta de Apple Developer (99 USD al año), un emisor de Google Wallet y una función en el servidor que firme las tarjetas.
   - La tarjeta web ya tiene el mismo diseño: el QR, el código y los campos pasan tal cual.
