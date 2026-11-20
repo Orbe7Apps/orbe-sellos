@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tarjeta cromada · maqueta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Space+Grotesk:wght@500;700&family=Baloo+2:wght@600;800&display=swap">
+<link rel="stylesheet" href="../sellos.css">
+<style>
+  body { overflow-x: hidden; }
+  .pagina { max-width: 1100px; margin: 0 auto; padding: calc(env(safe-area-inset-top) + 16px) 16px 60px; display: grid; gap: 22px; }
+  @media (min-width: 900px) { .pagina { grid-template-columns: 1fr 420px; align-items: start; } .escenario { position: sticky; top: 20px; } }
+  .cabeza { grid-column: 1 / -1; }
+  .cabeza h1 { font-size: 24px; }
+  .cabeza p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+
+  /* ---------- Escenario ---------- */
+  .escenario { display: grid; gap: 14px; justify-items: center; padding: 26px 0 8px;
+    background: radial-gradient(70% 60% at 50% 40%, color-mix(in srgb, var(--c1) 30%, transparent), transparent 70%); border-radius: 28px; }
+  @media (max-width: 899px) { .escenario { position: sticky; top: 0; z-index: 5; background-color: var(--bg); padding: calc(env(safe-area-inset-top) + 14px) 0 12px; margin: 0 -16px; border-radius: 0 0 28px 28px; box-shadow: 0 10px 24px -18px rgba(0,0,0,.4); } }
+  .persp { perspective: 1100px; width: min(360px, calc(100vw - 48px)); touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+  .persp:active { cursor: grabbing; }
+
+  /* ---------- La carta ---------- */
+  .carta { --rx: 0; --ry: 0; --mx: 50; --my: 50; --fuerza: .4; --ang: 0; --vuelta: 0;
+    position: relative; aspect-ratio: 1.586; border-radius: var(--radio); transform-style: preserve-3d;
+    transform: rotateX(calc(var(--rx) * 1deg)) rotateY(calc(var(--ry) * 1deg + var(--vuelta) * 1deg));
+    transition: transform .08s linear; will-change: transform; }
+  .cara { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    box-shadow: 0 calc(18px + var(--rx) * -.6px) 40px -14px rgba(0,0,0,.55), 0 2px 4px rgba(0,0,0,.2); }
+  .dorso { transform: rotateY(180deg); }
+  .fondo { position: absolute; inset: 0; background: linear-gradient(var(--grad), var(--c1), var(--c2)); }
+  .patron { position: absolute; inset: 0; opacity: .9; }
+  .p-lisa { display: none; }
+  .p-rayas { background: repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 10px, transparent 10px 20px); }
+  .p-puntos { background: radial-gradient(rgba(255,255,255,.16) 1.4px, transparent 1.6px) 0 0 / 14px 14px; }
+  .p-rayos { background: repeating-conic-gradient(from 0deg at 50% 125%, rgba(255,255,255,.09) 0 5deg, transparent 5deg 10deg); }
+  .p-rombos { background: conic-gradient(from 45deg, rgba(255,255,255,.07) 25%, transparent 0 50%, rgba(255,255,255,.07) 0 75%, transparent 0) 0 0 / 26px 26px; }
+  .p-ondas { background: radial-gradient(circle at 50% 120%, transparent 30%, rgba(255,255,255,.07) 31% 33%, transparent 34% 40%, rgba(255,255,255,.07) 41% 43%, transparent 44% 50%, rgba(255,255,255,.07) 51% 53%, transparent 54% 60%, rgba(255,255,255,.07) 61% 63%, transparent 64%); }
+
+  .contenido { position: absolute; inset: 0; padding: 16px 16px 14px; display: flex; flex-direction: column; gap: 8px; color: var(--tinta); font-family: var(--letra); }
+  .c-cab { display: flex; align-items: center; gap: 10px; min-height: 40px; }
+  .c-logo { height: 40px; max-width: 120px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,.35)); }
+  .c-nombre { font-weight: 800; font-size: 19px; letter-spacing: -.02em; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 2px rgba(0,0,0,.25); }
+  .c-cod { font: 700 12px/1 ui-monospace, Menlo, monospace; letter-spacing: .14em; padding: 6px 9px; border-radius: 999px; background: rgba(255,255,255,.2); backdrop-filter: blur(4px); }
+  .tinta-oscura .c-cod { background: rgba(0,0,0,.12); }
+  .sellos { flex: 1; display: grid; gap: 8px; align-content: center; justify-items: center; }
+  .c-pie { display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 14px; }
+  .c-pie small { font-weight: 600; opacity: .8; }
+
+  /* ---------- Sellos cromados ---------- */
+  .sello { position: relative; --tam: min(44px, calc((min(360px, 100vw - 48px) - 32px - (var(--cols) - 1) * 8px) / var(--cols))); width: var(--tam); height: var(--tam); align-self: center; border-radius: var(--forma-radio); clip-path: var(--forma-clip); }
+  .sello.hueco { background: rgba(0,0,0,.2); box-shadow: inset 0 2px 4px rgba(0,0,0,.35), inset 0 -1px 0 rgba(255,255,255,.18); }
+  .tinta-oscura .sello.hueco { background: rgba(0,0,0,.1); }
+  .sello.hueco.premio::after { content: ''; position: absolute; inset: 26%; background: currentColor; opacity: .7;
+    -webkit-mask: var(--regalo) center / contain no-repeat; mask: var(--regalo) center / contain no-repeat; }
+  .sello.si { background: conic-gradient(from calc(var(--ang) * 1deg + var(--i) * 29deg), var(--metal)); box-shadow: 0 3px 8px rgba(0,0,0,.4), inset 0 0 0 1.5px rgba(255,255,255,.55); }
+  .sello.si .marca { position: absolute; inset: 20%;
+    background: linear-gradient(rgba(0,0,0,.32), rgba(0,0,0,.32)), conic-gradient(from calc(var(--ang) * -1.4deg + 180deg + var(--i) * 29deg), var(--metal));
+    -webkit-mask: var(--logo-sello) center / contain no-repeat; mask: var(--logo-sello) center / contain no-repeat;
+    filter: drop-shadow(0 1px 0 rgba(255,255,255,.9)) drop-shadow(0 -1px 0 rgba(0,0,0,.55)); }
+  .sello.si::after { content: ''; position: absolute; inset: 0; border-radius: inherit;
+    background: radial-gradient(circle at calc(var(--mx) * 1%) calc(var(--my) * 1%), rgba(255,255,255,.85), transparent 45%); mix-blend-mode: overlay; }
+  .sello.nuevo { animation: estampa .6s var(--bounce) both; }
+  .sello.nuevo::before { content: ''; position: absolute; inset: 0; z-index: 2; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.95) 50%, transparent 70%) -150% 0 / 250% 100% no-repeat; animation: destello .9s .25s ease-out both; }
+  @keyframes destello { to { background-position: 150% 0; } }
+
+  /* ---------- Capas de brillo ---------- */
+  .holo, .chispas, .reflejo, .marco-cromo { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
+  .holo { background-image: repeating-linear-gradient(115deg, #ff6f91 0%, #ffc75f 6%, #f9f871 10%, #8dffb0 15%, #6bd6ff 21%, #a98bff 27%, #ff6f91 33%);
+    background-size: 400% 400%; background-position: calc(var(--mx) * 1%) calc(var(--my) * 1%);
+    mix-blend-mode: color-dodge; filter: brightness(.5) contrast(1.6) saturate(1.2); opacity: calc(var(--holo) * var(--fuerza) * .75); }
+  .acabado-cromo .holo { background-image: repeating-linear-gradient(115deg, #fff 0%, #8d95a0 7%, #fff 12%, #5d6570 19%, #fff 26%); mix-blend-mode: overlay; filter: none; }
+  .acabado-oro .holo { background-image: repeating-linear-gradient(115deg, #fff3c4 0%, #b8862a 7%, #fff6cf 12%, #8a5d10 19%, #fff3c4 26%); mix-blend-mode: overlay; filter: none; }
+  .acabado-mate .holo { display: none; }
+  .chispas { background-image: var(--ruido); background-size: 220px; background-position: calc(var(--mx) * -1.5px) calc(var(--my) * -1.5px);
+    mix-blend-mode: color-dodge; opacity: calc(var(--holo) * var(--fuerza) * .9); }
+  .acabado-mate .chispas, .acabado-cromo .chispas { opacity: calc(var(--holo) * var(--fuerza) * .35); }
+  .reflejo { background: radial-gradient(farthest-corner circle at calc(var(--mx) * 1%) calc(var(--my) * 1%), rgba(255,255,255,.6) 0%, rgba(255,255,255,.12) 30%, rgba(0,0,0,.25) 90%); mix-blend-mode: overlay; opacity: calc(.4 + var(--fuerza) * .6); }
+  .marco-cromo { box-shadow: inset 0 0 0 2px rgba(255,255,255,.35), inset 0 0 0 3px rgba(0,0,0,.12); }
+
+  /* Premio listo: brilla más */
+  .lista .holo { opacity: calc(var(--holo) * (var(--fuerza) + .35)); }
+  .lista .cara.frente { animation: late 1.6s ease-in-out infinite alternate; }
+  @keyframes late { to { box-shadow: 0 18px 50px -10px var(--c1), 0 0 0 3px color-mix(in srgb, var(--c1) 50%, #fff); } }
+
+  /* Dorso */
+  .dorso .contenido { align-items: center; justify-content: center; text-align: center; gap: 6px; }
+  .dorso .c-logo { height: 30px; }
+  .dorso .qr { width: 34%; border-radius: 10px; background: #fff; padding: 6px; box-shadow: 0 4px 12px rgba(0,0,0,.3); }
+  .dorso b { font-size: 26px; letter-spacing: .2em; font-family: ui-monospace, Menlo, monospace; }
+
+  .acciones { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .acciones .b-sec { min-height: 40px; font-size: 14px; }
+  .acciones .b-sec.pri { background: var(--accent); color: #fff; }
+  .ayuda { font-size: 13px; color: var(--muted); text-align: center; margin: 0; }
+
+  /* ---------- Panel ---------- */
+  .panel { display: grid; gap: 12px; }
+  .panel .caja { display: grid; gap: 10px; }
+  .panel h2 { font-size: 17px; }
+  .panel .chips { gap: 6px; }
+  .panel .chip { min-height: 40px; padding: 0 13px; font-size: 14px; }
+  .fila-col { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .fila-col label { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+  input[type=color] { width: 46px; height: 40px; padding: 2px; border-radius: 12px; }
+  input[type=range] { padding: 0; background: none; accent-color: var(--accent); }
+  .logo-sube { display: flex; align-items: center; gap: 12px; }
+  .logo-prev { width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center; flex: none;
+    background: repeating-conic-gradient(var(--fill) 0 25%, transparent 0 50%) 0 0 / 14px 14px; border: 1.5px dashed var(--line); }
+  .logo-prev img { max-width: 52px; max-height: 52px; }
+  .metal-chip { width: 18px; height: 18px; border-radius: 50%; background: conic-gradient(var(--m)); box-shadow: inset 0 0 0 1px rgba(0,0,0,.15); }
+  .paletas { display: flex; gap: 8px; flex-wrap: wrap; }
+  .paletas button { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--a), var(--b)); border: 3px solid transparent; box-shadow: inset 0 0 0 2px var(--bg); }
+  .paletas button.si { border-color: var(--accent); }
+  .nota { font-size: 13px; color: var(--muted); margin: 0; }
+  .ok-movil { display: none; }
+</style>
+</head>
+<body>
+<div class="pagina">
+  <div class="cabeza">
+    <h1>Tarjeta cromada · maqueta</h1>
+    <p>Mueve la tarjeta con el dedo (o inclina el teléfono). Abajo se personaliza todo. Tócala dos veces para verla por detrás.</p>
+  </div>
+
+  <div class="escenario" id="escenario">
+    <div class="persp" id="persp">
+      <div class="carta" id="carta">
+        <div class="cara frente">
+          <div class="fondo"></div><div class="patron" id="patron"></div>
+          <div class="contenido">
+            <div class="c-cab"><img class="c-logo" id="cLogo" alt=""><span class="c-nombre" id="cNombre"></span><span class="c-cod">K7Q2</span></div>
+            <div class="sellos" id="sellos"></div>
+            <div class="c-pie"><span id="cPremio"></span><small id="cFaltan"></small></div>
+          </div>
+          <div class="holo"></div><div class="chispas"></div><div class="reflejo"></div><div class="marco-cromo"></div>
+        </div>
+        <div class="cara dorso">
+          <div class="fondo"></div><div class="patron" id="patron2"></div>
+          <div class="contenido"><img class="c-logo" id="cLogo2" alt=""><div id="qr"></div><b>K7Q2</b><small>Muestra este código al pagar</small></div>
+          <div class="holo"></div><div class="chispas"></div><div class="reflejo"></div><div class="marco-cromo"></div>
+        </div>
+      </div>
+    </div>
+    <div class="acciones">
+      <button class="b-sec pri" id="bSellar">Sellar +1</button>
+      <button class="b-sec" id="bVoltear">Voltear</button>
+      <button class="b-sec" id="bReiniciar">Empezar de nuevo</button>
+      <button class="b-sec" id="bMovimiento" hidden>Mover con el teléfono</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="caja">
+      <h2>Logo</h2>
+      <div class="logo-sube">
+        <div class="logo-prev"><img id="logoPrev" alt="Logo"></div>
+        <div class="pila" style="gap:6px;flex:1">
+          <label class="b-sec ancho" style="min-height:44px">Subir mi logo<input type="file" id="logoArchivo" accept="image/png,image/svg+xml,image/webp" hidden></label>
+          <p class="nota">PNG o SVG con fondo transparente. Sale arriba en la tarjeta y grabado en cromo en cada sello.</p>
+        </div>
+      </div>
+      <div class="chips" id="dibujoSello"></div>
+    </div>
+
+    <div class="caja">
+      <h2>Textos</h2>
+      <input id="iNombre" maxlength="30" value="Café Luna" aria-label="Nombre del negocio">
+      <input id="iPremio" maxlength="30" value="Café gratis" aria-label="Premio">
+      <span class="etq" style="margin:4px 0 0">Letra</span>
+      <div class="chips" id="letras"></div>
+      <span class="etq" style="margin:4px 0 0">Color del texto</span>
+      <div class="chips" id="tintas"></div>
+    </div>
+
+    <div class="caja">
+      <h2>Colores</h2>
+      <div class="paletas" id="paletas"></div>
+      <div class="fila-col">
+        <label>Color 1 <input type="color" id="c1"></label>
+        <label>Color 2 <input type="color" id="c2"></label>
+      </div>
+      <span class="etq" style="margin:4px 0 0">Dirección del degradado</span>
+      <input type="range" id="grad" min="0" max="360" value="135" aria-label="Dirección del degradado">
+    </div>
+
+    <div class="caja">
+      <h2>Acabado de la tarjeta</h2>
+      <div class="chips" id="acabados"></div>
+      <span class="etq" style="margin:4px 0 0">Intensidad del brillo</span>
+      <input type="range" id="holo" min="0" max="100" value="70" aria-label="Intensidad del brillo">
+      <span class="etq" style="margin:4px 0 0">Textura de fondo</span>
+      <div class="chips" id="patrones"></div>
+    </div>
+
+    <div class="caja">
+      <h2>Sellos</h2>
+      <span class="etq" style="margin:0">Metal</span>
+      <div class="chips" id="metales"></div>
+      <span class="etq" style="margin:4px 0 0">Forma</span>
+      <div class="chips" id="formas"></div>
+      <span class="etq" style="margin:4px 0 0">Cantidad de sellos</span>
+      <div class="chips" id="cantidades"></div>
+    </div>
+
+    <div class="caja">
+      <h2>Esquinas</h2>
+      <input type="range" id="radio" min="6" max="36" value="24" aria-label="Esquinas">
+    </div>
+    <p class="nota">Es una maqueta: lo que elijas aquí no se guarda. Si te gusta, lo paso a la app (el dueño lo elige en Ajustes y cada cliente ve su tarjeta así).</p>
+  </div>
+</div>
+
+<script type="module">
+import qrcode from '../js/lib/qrcode.js';
+const $ = id => document.getElementById(id);
+const raiz = document.documentElement, carta = $('carta'), persp = $('persp');
+
+// ---------- Opciones ----------
+const METALES = {
+  plata:   { n: 'Plata',    m: '#f8f9fb, #a9b0bb, #eef1f5, #6f7884, #ffffff, #9aa3ae, #e3e7ec, #7d8693, #f8f9fb' },
+  oro:     { n: 'Oro',      m: '#fff6cf, #c8962e, #ffe9a3, #8f6110, #fff3c4, #b8862a, #ffe39a, #9c6b14, #fff6cf' },
+  rosa:    { n: 'Oro rosa', m: '#ffe4dc, #c98477, #ffd3c7, #8e4f46, #fff0eb, #b9786c, #ffd9cf, #9e5a50, #ffe4dc' },
+  arcoiris:{ n: 'Arcoíris', m: '#ff9ab0, #ffe08a, #a6ffcb, #8ad8ff, #c9a6ff, #ff9ab0, #fff, #8ad8ff, #ff9ab0' },
+  negro:   { n: 'Negro',    m: '#6b6b70, #111114, #9a9aa0, #000, #5a5a60, #1c1c20, #8a8a90, #0a0a0c, #6b6b70' }
+};
+const ACABADOS = { holo: 'Holográfico', cromo: 'Cromo', oro: 'Dorado', mate: 'Mate' };
+const PATRONES = { lisa: 'Lisa', rayos: 'Rayos', rayas: 'Rayas', puntos: 'Puntos', rombos: 'Rombos', ondas: 'Ondas' };
+const FORMAS = {
+  circulo:  { n: 'Círculo',  r: '50%', c: 'none' },
+  hexagono: { n: 'Hexágono', r: '0',   c: 'polygon(25% 4%, 75% 4%, 100% 50%, 75% 96%, 25% 96%, 0 50%)' },
+  escudo:   { n: 'Escudo',   r: '0',   c: 'polygon(50% 0, 100% 14%, 92% 66%, 50% 100%, 8% 66%, 0 14%)' },
+  cuadro:   { n: 'Cuadrado', r: '28%', c: 'none' },
+  estrella: { n: 'Estrella', r: '0',   c: 'polygon(50% 0, 62% 33%, 98% 36%, 70% 58%, 80% 94%, 50% 74%, 20% 94%, 30% 58%, 2% 36%, 38% 33%)' }
+};
+const LETRAS = { inter: ['Moderna', 'Inter, sans-serif'], fraunces: ['Clásica', 'Fraunces, Georgia, serif'], grotesk: ['Técnica', '"Space Grotesk", sans-serif'], baloo: ['Divertida', '"Baloo 2", sans-serif'] };
+const PALETAS = [['#3b1f0f', '#b5733f'], ['#1a1733', '#6a5cf2'], ['#0b3d2e', '#2fbf8f'], ['#5b0f2e', '#ff5c8a'], ['#0d2b4a', '#2f9ee0'], ['#111', '#555'], ['#f6e7c8', '#d9a95b'], ['#fdfdfd', '#c9cfd8']];
+const REGALO = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16v9.5H4zM3 7h18v4H3zM12 7v13.5M12 7c-1.5-4-6-4-5.5-.5M12 7c1.5-4 6-4 5.5-.5"/></svg>');
+const logoDemo = color => 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="29" fill="none" stroke="#fff" stroke-width="4"/><path d="M17 25h26v9a11 11 0 0 1-11 11h-4a11 11 0 0 1-11-11z" fill="#fff"/><path d="M43 28h3a5 5 0 0 1 0 10h-3" fill="none" stroke="#fff" stroke-width="4"/><path d="M25 13c-2 3 2 5 0 8M32 13c-2 3 2 5 0 8M39 13c-2 3 2 5 0 8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>'.replaceAll('#fff', color));
+const LOGO_DEMO = logoDemo('#fff');
+const ICONO_SELLO = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5L2.6 9.3l6.5-.9z" fill="#000"/></svg>');
+const RUIDO = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="7"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 14 -10"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>');
+
+const e = { demo: true, logo: LOGO_DEMO, dibujo: 'logo', nombre: 'Café Luna', premio: 'Café gratis', letra: 'inter', tinta: 'clara', c1: '#3b1f0f', c2: '#b5733f', grad: 135,
+  acabado: 'holo', holo: 70, patron: 'rayos', metal: 'plata', forma: 'circulo', meta: 10, sellos: 6, radio: 24 };
+
+// ---------- Pintar ----------
+function chips(id, opciones, clave, extra) {
+  const cont = $(id); cont.innerHTML = '';
+  for (const [k, v] of Object.entries(opciones)) {
+    const b = document.createElement('button'); b.className = 'chip' + (e[clave] == k ? ' si' : '');
+    b.innerHTML = (extra ? extra(k, v) : '') + (typeof v === 'string' ? v : Array.isArray(v) ? v[0] : v.n);
+    b.onclick = () => { e[clave] = isNaN(k) ? k : +k; if (clave === 'meta') e.sellos = Math.min(e.sellos, e.meta); pintarTodo(); };
+    cont.appendChild(b);
+  }
+}
+function pintarSellos(nuevo = -1) {
+  const cont = $('sellos'); cont.innerHTML = '';
+  const cols = e.meta <= 6 ? e.meta : e.meta <= 10 ? 5 : 6;
+  cont.style.gridTemplateColumns = `repeat(${cols}, 1fr)`; cont.style.setProperty('--cols', cols);
+  for (let i = 0; i < e.meta; i++) {
+    const s = document.createElement('span'); s.style.setProperty('--i', i);
+    if (i < e.sellos) { s.className = 'sello si' + (i === nuevo ? ' nuevo' : ''); s.innerHTML = '<span class="marca"></span>'; }
+    else s.className = 'sello hueco' + (i === e.meta - 1 ? ' premio' : '');
+    cont.appendChild(s);
+  }
+  const faltan = e.meta - e.sellos;
+  $('cFaltan').textContent = faltan <= 0 ? '¡Premio listo!' : faltan === 1 ? 'Te falta 1' : `Te faltan ${faltan}`;
+  carta.classList.toggle('lista', faltan <= 0);
+}
+function pintarTodo() {
+  const f = FORMAS[e.forma];
+  if (e.demo) e.logo = logoDemo(e.tinta === 'oscura' ? '#17142b' : '#fff');
+  const v = { '--c1': e.c1, '--c2': e.c2, '--grad': e.grad + 'deg', '--holo': e.holo / 100, '--radio': e.radio + 'px', '--metal': METALES[e.metal].m,
+    '--forma-radio': f.r, '--forma-clip': f.c, '--letra': LETRAS[e.letra][1], '--tinta': e.tinta === 'clara' ? '#fff' : '#17142b',
+    '--logo-sello': `url("${e.dibujo === 'logo' ? e.logo : ICONO_SELLO}")`, '--regalo': `url("${REGALO}")`, '--ruido': `url("${RUIDO}")` };
+  for (const k in v) raiz.style.setProperty(k, v[k]);
+  carta.className = 'carta acabado-' + e.acabado + (e.tinta === 'oscura' ? ' tinta-oscura' : '') + (e.sellos >= e.meta ? ' lista' : '');
+  $('patron').className = $('patron2').className = 'patron p-' + e.patron;
+  $('cLogo').src = $('cLogo2').src = $('logoPrev').src = e.logo;
+  $('cNombre').textContent = e.nombre; $('cPremio').textContent = e.premio;
+  $('c1').value = e.c1; $('c2').value = e.c2;
+  chips('dibujoSello', { logo: 'Mi logo en los sellos', icono: 'Estrella en los sellos' }, 'dibujo');
+  chips('letras', LETRAS, 'letra');
+  chips('tintas', { clara: 'Claro', oscura: 'Oscuro' }, 'tinta');
+  chips('acabados', ACABADOS, 'acabado');
+  chips('patrones', PATRONES, 'patron');
+  chips('metales', METALES, 'metal', (k, m) => `<span class="metal-chip" style="--m:${m.m}"></span>`);
+  chips('formas', FORMAS, 'forma');
+  chips('cantidades', { 6: '6', 8: '8', 10: '10', 12: '12' }, 'meta');
+  const pal = $('paletas'); pal.innerHTML = '';
+  for (const [a, b] of PALETAS) { const x = document.createElement('button'); x.style.cssText = `--a:${a};--b:${b}`; x.className = e.c1 === a && e.c2 === b ? 'si' : ''; x.setAttribute('aria-label', 'Colores'); x.onclick = () => { e.c1 = a; e.c2 = b; e.tinta = /^#f/.test(a) ? 'oscura' : 'clara'; pintarTodo(); }; pal.appendChild(x); }
+  pintarSellos();
+}
+
+// ---------- Controles ----------
+$('iNombre').oninput = ev => { e.nombre = ev.target.value; $('cNombre').textContent = e.nombre; };
+$('iPremio').oninput = ev => { e.premio = ev.target.value; $('cPremio').textContent = e.premio; };
+$('c1').oninput = ev => { e.c1 = ev.target.value; raiz.style.setProperty('--c1', e.c1); };
+$('c2').oninput = ev => { e.c2 = ev.target.value; raiz.style.setProperty('--c2', e.c2); };
+$('grad').oninput = ev => { e.grad = +ev.target.value; raiz.style.setProperty('--grad', e.grad + 'deg'); };
+$('holo').oninput = ev => { e.holo = +ev.target.value; raiz.style.setProperty('--holo', e.holo / 100); };
+$('radio').oninput = ev => { e.radio = +ev.target.value; raiz.style.setProperty('--radio', e.radio + 'px'); };
+$('logoArchivo').onchange = ev => {
+  const a = ev.target.files[0]; if (!a) return;
+  const r = new FileReader(); r.onload = () => { e.demo = false; e.logo = r.result; e.dibujo = 'logo'; pintarTodo(); }; r.readAsDataURL(a);
+};
+$('bSellar').onclick = () => {
+  if (e.sellos >= e.meta) { e.sellos = 1; pintarSellos(0); } else { e.sellos++; pintarSellos(e.sellos - 1); }
+  try { navigator.vibrate && navigator.vibrate(e.sellos >= e.meta ? [30, 60, 30, 60, 90] : 35); } catch (x) {}
+  empujon();
+};
+$('bReiniciar').onclick = () => { e.sellos = 2; pintarSellos(); };
+let vuelta = 0;
+const voltear = () => { vuelta = vuelta ? 0 : 180; };
+$('bVoltear').onclick = voltear;
+
+// QR del dorso
+(() => { const q = qrcode(0, 'M'); q.addData('https://orbe7apps.github.io/orbe-sellos/t.html?p=demo'); q.make(); const n = q.getModuleCount(); let d = '';
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) d += `M${c} ${r}h1v1h-1z`;
+  $('qr').innerHTML = `<svg class="qr" viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges"><path d="${d}" fill="#111"/></svg>`; })();
+
+// ---------- Movimiento ----------
+// Destino (dedo o teléfono) y posición actual, que lo sigue con suavidad.
+const dest = { rx: 0, ry: 0, mx: 50, my: 50 }, act = { rx: 0, ry: 0, mx: 50, my: 50, v: 0 };
+let tocando = false, sensor = false, base = null, ultimoToque = 0, golpe = 0;
+function desdePunto(x, y) {
+  const r = persp.getBoundingClientRect();
+  const px = Math.min(1, Math.max(0, (x - r.left) / r.width)), py = Math.min(1, Math.max(0, (y - r.top) / r.height));
+  dest.ry = (px - .5) * 34; dest.rx = (.5 - py) * 26; dest.mx = px * 100; dest.my = py * 100;
+}
+persp.addEventListener('pointerdown', ev => { tocando = true; persp.setPointerCapture(ev.pointerId); desdePunto(ev.clientX, ev.clientY);
+  const t = Date.now(); if (t - ultimoToque < 320) voltear(); ultimoToque = t; });
+persp.addEventListener('pointermove', ev => { if (tocando || ev.pointerType === 'mouse') desdePunto(ev.clientX, ev.clientY); });
+const soltar = () => { tocando = false; if (!sensor) Object.assign(dest, { rx: 0, ry: 0, mx: 50, my: 50 }); };
+persp.addEventListener('pointerup', soltar); persp.addEventListener('pointercancel', soltar); persp.addEventListener('pointerleave', ev => ev.pointerType === 'mouse' && soltar());
+function alInclinar(ev) {
+  if (ev.beta == null || tocando) return; sensor = true;
+  if (!base) base = { b: ev.beta, g: ev.gamma };
+  const b = Math.max(-25, Math.min(25, ev.beta - base.b)), g = Math.max(-25, Math.min(25, ev.gamma - base.g));
+  dest.rx = -b * .9; dest.ry = g * 1.1; dest.mx = 50 + g * 2; dest.my = 50 + b * 2;
+}
+if (window.DeviceOrientationEvent) {
+  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+    const b = $('bMovimiento'); b.hidden = false;
+    b.onclick = async () => { try { if (await DeviceOrientationEvent.requestPermission() === 'granted') { addEventListener('deviceorientation', alInclinar); b.hidden = true; } } catch (x) {} };
+  } else addEventListener('deviceorientation', alInclinar);
+}
+function empujon() { golpe = 1; }
+function cuadro() {
+  const k = tocando ? .25 : .08;
+  for (const p of ['rx', 'ry', 'mx', 'my']) act[p] += (dest[p] - act[p]) * k;
+  act.v += (vuelta - act.v) * .12;
+  // Sin dedo ni sensor: balanceo suave para que se vea vivo.
+  let rx = act.rx, ry = act.ry, mx = act.mx, my = act.my;
+  if (!tocando && !sensor) { const t = performance.now() / 1000; ry += Math.sin(t * .9) * 7; rx += Math.cos(t * .7) * 4; mx += Math.sin(t * .9) * 22; my += Math.cos(t * .7) * 14; }
+  if (golpe > .01) { rx += golpe * 6; golpe *= .88; }
+  const dist = Math.min(1, Math.hypot(mx - 50, my - 50) / 50);
+  const s = carta.style;
+  s.setProperty('--rx', rx.toFixed(2)); s.setProperty('--ry', ry.toFixed(2)); s.setProperty('--vuelta', act.v.toFixed(2));
+  s.setProperty('--mx', mx.toFixed(1)); s.setProperty('--my', my.toFixed(1));
+  s.setProperty('--fuerza', (.3 + dist * .7).toFixed(3)); s.setProperty('--ang', (ry * 5 + rx * 4).toFixed(1));
+  requestAnimationFrame(cuadro);
+}
+pintarTodo(); requestAnimationFrame(cuadro);
+</script>
+</body>
+</html>

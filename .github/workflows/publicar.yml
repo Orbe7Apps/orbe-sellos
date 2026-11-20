@@ -1,5 +1,5 @@
 # Publica la app en GitHub Pages cada vez que cambia la rama main.
-# Solo sube la app (no los documentos ni el video).
+# Sube la app y las maquetas (no los documentos ni el video).
 name: Publicar en GitHub Pages
 
 on:
@@ -27,7 +27,7 @@ jobs:
       - name: Juntar los archivos de la app
         run: |
           mkdir -p _sitio
-          cp -r index.html t.html sellos.css icono.svg icono-180.png js _sitio/
+          cp -r index.html t.html sellos.css icono.svg icono-180.png js maquetas _sitio/
           touch _sitio/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
