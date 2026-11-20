@@ -1,5 +1,5 @@
 // Tarjeta del cliente: se abre al escanear el QR del cartel. Sin app, sin registro.
-import { html, render, useState, useEffect, useRef } from '../../js/lib/preact-htm.js';
+import { html, render, useState, useEffect, useRef } from './lib/preact-htm.js';
 import { llamar, alCambiar, misTarjetas, guardarMiTarjeta } from './datos.js';
 import { t, IDIOMA } from './textos.js';
 import { Tarjeta, Qr, Icono, Hoja, Avisos, avisar, golpe, confeti, enlaceTarjeta } from './comun.js';

@@ -1,5 +1,5 @@
 // Piezas que comparten la app del negocio y la tarjeta del cliente.
-import { html, useState, useEffect, useRef } from '../../js/lib/preact-htm.js';
+import { html, useState, useEffect, useRef } from './lib/preact-htm.js';
 import qrcode from './lib/qrcode.js';
 
 // ---------- Íconos de línea (grosor 2, puntas redondeadas) ----------

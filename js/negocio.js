@@ -1,5 +1,5 @@
 // App del negocio: crear la tarjeta en 3 pasos, sellar, ver clientes, imprimir el cartel y ajustar.
-import { html, render, useState, useEffect, useRef } from '../../js/lib/preact-htm.js';
+import { html, render, useState, useEffect, useRef } from './lib/preact-htm.js';
 import { llamar, alCambiar, miNegocio, guardarMiNegocio, olvidarMiNegocio, EN_NUBE, MINUTOS_REPETIDO, limpiarCodigo } from './datos.js';
 import { Tarjeta, Qr, Icono, Hoja, Avisos, avisar, golpe, confeti, enlaceTarjeta, ICONOS_NEGOCIO, COLORES } from './comun.js';
 
@@ -158,7 +158,7 @@ async function crearLector() {
   if ('BarcodeDetector' in window) {
     try { if ((await BarcodeDetector.getSupportedFormats()).includes('qr_code')) { const d = new BarcodeDetector({ formats: ['qr_code'] }); return async v => ((await d.detect(v))[0] || {}).rawValue || ''; } } catch (e) { /* sigue con ZXing */ }
   }
-  if (!window.ZXing) await cargar(new URL('../../js/lib/zxing.min.js', import.meta.url).href);
+  if (!window.ZXing) await cargar(new URL('./lib/zxing.min.js', import.meta.url).href);
   const Z = window.ZXing, h = new Map(); h.set(Z.DecodeHintType.POSSIBLE_FORMATS, [Z.BarcodeFormat.QR_CODE]);
   const lector = new Z.MultiFormatReader(); lector.setHints(h);
   const cv = document.createElement('canvas'), cx = cv.getContext('2d', { willReadFrequently: true });
