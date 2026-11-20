@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maqueta PIN</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../sellos.css">
+<style>
+  body { background: #e9e7f5; padding: 28px 24px 40px; }
+  .titulo-m { max-width: 1680px; margin: 0 auto 6px; font-size: 26px; }
+  .sub-m { max-width: 1680px; margin: 0 auto 22px; color: var(--muted); }
+  .tira { display: flex; gap: 26px; justify-content: center; flex-wrap: wrap; }
+  .marco { width: 390px; }
+  .marco > b { display: block; margin: 0 0 4px 6px; font-size: 15px; }
+  .marco > small { display: block; margin: 0 0 10px 6px; color: var(--muted); min-height: 40px; }
+  .tel { position: relative; width: 390px; height: 800px; background: var(--bg); border-radius: 44px; overflow: hidden; box-shadow: 0 0 0 10px #1a1733, 0 30px 60px -20px rgba(0,0,0,.4); }
+  .tel .app { padding-top: 26px; }
+  .tel .velo { position: absolute; animation: none; }
+  .tel .hoja { animation: none; }
+  .ic { display: block; }
+  /* Lo nuevo */
+  .puntos { display: flex; gap: 18px; justify-content: center; margin: 18px 0 26px; }
+  .puntos i { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--ink); }
+  .puntos i.si { background: var(--ink); }
+  .puntos.mal i { border-color: var(--out); background: var(--out); }
+  .teclado { display: grid; grid-template-columns: repeat(3, 76px); gap: 16px 26px; justify-content: center; }
+  .teclado button { width: 76px; height: 76px; border-radius: 50%; background: var(--fill); font-size: 30px; font-weight: 500; display: grid; place-items: center; }
+  .teclado button.vacia { background: none; }
+  .candado { width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; margin: 0 auto 14px; color: #fff; }
+  .nuevo { outline: 2.5px dashed var(--warn); outline-offset: 4px; border-radius: 22px; }
+  .etq-nuevo { display: inline-block; font-size: 11px; font-weight: 700; color: #8a5a00; background: color-mix(in srgb, var(--warn) 30%, #fff); padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: 2px; }
+  .barra { position: absolute; }
+</style>
+</head>
+<body>
+<h1 class="titulo-m">PIN para sellar · maqueta</h1>
+<p class="sub-m">Para que nadie selle si el teléfono queda en el mostrador. Es opcional, se activa en Ajustes y vale solo para ese teléfono. Lo nuevo va marcado en amarillo.</p>
+
+<div class="tira">
+
+  <!-- 1. Ajustes -->
+  <div class="marco">
+    <b>1 · Se activa en Ajustes</b>
+    <small>Apagado de fábrica. Al encenderlo se elige el PIN.</small>
+    <div class="tel"><div class="app">
+      <div class="fila" style="justify-content:space-between;margin-bottom:16px">
+        <div class="fila"><span style="background:#8a5a3c;color:#fff;width:40px;height:40px;border-radius:13px;display:grid;place-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM16 9.5h1.5a2.5 2.5 0 0 1 0 5H16M8 2.5v2.5M12 2.5v2.5M5 21h10"/></svg></span>
+          <div><b style="display:block;font-size:18px;letter-spacing:-.02em">Café Luna</b><small class="muted">8 compras = Café gratis</small></div></div>
+      </div>
+      <div class="pila">
+        <button class="fila caja" style="text-align:left;align-items:flex-start;width:100%"><span style="flex:1"><b style="display:block">Sello de arranque</b><small class="muted">Después del premio, la tarjeta nueva empieza con 1 sello para que no se enfríe.</small></span>
+          <span style="flex:none;width:50px;height:30px;border-radius:15px;padding:3px;background:var(--in)"><span style="display:block;width:24px;height:24px;border-radius:50%;background:#fff;transform:translateX(20px)"></span></span></button>
+        <button class="fila caja" style="text-align:left;align-items:flex-start;width:100%"><span style="flex:1"><b style="display:block">Sello doble sorpresa</b><small class="muted">De vez en cuando (1 de cada 10) un sello vale doble.</small></span>
+          <span style="flex:none;width:50px;height:30px;border-radius:15px;padding:3px;background:var(--in)"><span style="display:block;width:24px;height:24px;border-radius:50%;background:#fff;transform:translateX(20px)"></span></span></button>
+        <button class="fila caja nuevo" style="text-align:left;align-items:flex-start;width:100%"><span style="flex:1"><b style="display:block">PIN para sellar <span class="etq-nuevo">NUEVO</span></b><small class="muted">Pide 4 números al abrir la app en este teléfono y después de 5 minutos sin usarla. Así nadie sella si lo dejas en el mostrador.</small></span>
+          <span style="flex:none;width:50px;height:30px;border-radius:15px;padding:3px;background:var(--line)"><span style="display:block;width:24px;height:24px;border-radius:50%;background:#fff"></span></span></button>
+        <button class="b-sec ancho">Sellar desde otro teléfono</button>
+      </div>
+    </div>
+    <nav class="barra"><button>Sellar</button><button>Clientes</button><button>Cartel</button><button class="si">Ajustes</button></nav>
+    </div>
+  </div>
+
+  <!-- 2. Elegir PIN -->
+  <div class="marco">
+    <b>2 · Elegir el PIN</b>
+    <small>Se escribe dos veces. Sin teclado del teléfono: botones grandes.</small>
+    <div class="tel"><div class="app" style="opacity:.35"><b style="font-size:18px">Café Luna</b></div>
+      <div class="velo"><div class="hoja nuevo">
+        <div class="h-raya"></div>
+        <div class="h-cab"><h2>Elige un PIN de 4 números</h2><button class="b-icono">✕</button></div>
+        <div class="h-cuerpo">
+          <p class="sub" style="margin:0;text-align:center">Lo pediremos al abrir la app en este teléfono.</p>
+          <div class="puntos"><i class="si"></i><i class="si"></i><i></i><i></i></div>
+          <div class="teclado"><button>1</button><button>2</button><button>3</button><button>4</button><button>5</button><button>6</button><button>7</button><button>8</button><button>9</button><button class="vacia"></button><button>0</button><button class="vacia">⌫</button></div>
+          <p class="pista" style="justify-content:center;margin-top:18px">Luego te lo pedimos otra vez para confirmarlo.</p>
+        </div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- 3. Bloqueada -->
+  <div class="marco">
+    <b>3 · Al abrir la app</b>
+    <small>Pantalla completa con el ícono del negocio. Al acertar, entra directo a Sellar.</small>
+    <div class="tel nuevo" style="border-radius:44px"><div class="app" style="text-align:center;padding-top:80px">
+      <span class="candado" style="background:#8a5a3c"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM16 9.5h1.5a2.5 2.5 0 0 1 0 5H16M8 2.5v2.5M12 2.5v2.5M5 21h10"/></svg></span>
+      <h2 style="font-size:22px">Café Luna</h2>
+      <p class="sub" style="margin-top:4px">Escribe tu PIN para sellar</p>
+      <div class="puntos"><i class="si"></i><i></i><i></i><i></i></div>
+      <div class="teclado"><button>1</button><button>2</button><button>3</button><button>4</button><button>5</button><button>6</button><button>7</button><button>8</button><button>9</button><button class="vacia"></button><button>0</button><button class="vacia">⌫</button></div>
+      <button class="b-texto" style="margin-top:20px">Olvidé mi PIN</button>
+    </div></div>
+  </div>
+
+  <!-- 4. Olvidé -->
+  <div class="marco">
+    <b>4 · Si se olvida</b>
+    <small>Se puede quitar esperando 1 minuto con la pantalla abierta. Un cliente no espera tanto; el dueño sí.</small>
+    <div class="tel"><div class="app" style="text-align:center;padding-top:80px;opacity:.35">
+      <h2 style="font-size:22px">Café Luna</h2><div class="puntos mal"><i></i><i></i><i></i><i></i></div></div>
+      <div class="velo"><div class="hoja nuevo">
+        <div class="h-raya"></div>
+        <div class="h-cab"><h2>¿Olvidaste tu PIN?</h2><button class="b-icono">✕</button></div>
+        <div class="h-cuerpo pila">
+          <p class="sub" style="margin:0">Para quitarlo, deja esta pantalla abierta 1 minuto. Tus clientes y sus sellos no se tocan.</p>
+          <div class="caja" style="background:var(--fill);text-align:center"><b class="num" style="font-size:40px;letter-spacing:-.02em">0:42</b><br/><small class="muted">para quitar el PIN</small></div>
+          <p class="pista">Después puedes elegir uno nuevo en Ajustes.</p>
+        </div>
+        <div class="h-pie"><button class="b-pri" disabled>Quitar el PIN</button></div>
+      </div></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
