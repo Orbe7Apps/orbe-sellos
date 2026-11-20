@@ -119,7 +119,7 @@ Después imprime el cartel o comparte el enlace.
 
 - ✅ **Fase 1 (hecha):** app del negocio (`index.html`) y tarjeta del cliente (`t.html`).
   - Funciona en modo demostración: todo se guarda en el aparato, y si la tarjeta se abre en otra pestaña se ve sellarse en vivo.
-  - Falta traducir la app del negocio al inglés y al portugués (la tarjeta del cliente ya está en los tres idiomas).
+  - La app del negocio y la tarjeta del cliente están en español, inglés y portugués, según el idioma del teléfono (se puede forzar con `?lang=en`). Textos del negocio en `js/textos-negocio.js`.
 - ✅ **Repositorio propio (20 nov 2026):** `Orbe7Apps/orbe-sellos`, con publicación automática en GitHub Pages.
 - **Fase 1b: base de datos (por decidir, la decide Guillermo).**
   - **Regla:** los correos y los datos de los usuarios registrados van solo en **Supabase**, nunca en Notion. Si Notion se usa, guarda solo información de la app (programas, tarjetas, sellos, premios).

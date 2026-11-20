@@ -1,6 +1,7 @@
 // Piezas que comparten la app del negocio y la tarjeta del cliente.
 import { html, useState, useEffect, useRef } from './lib/preact-htm.js';
 import qrcode from './lib/qrcode.js';
+import { t } from './textos.js';
 
 // ---------- Íconos de línea (grosor 2, puntas redondeadas) ----------
 const P = {
@@ -93,7 +94,7 @@ export function Hoja({ titulo, cerrar, children, pie }) {
   return html`<div class="velo" onClick=${e => e.target === e.currentTarget && cerrar()}>
     <div class="hoja" ref=${ref} role="dialog" aria-modal="true" aria-label=${titulo}>
       <div class="h-raya"></div>
-      <div class="h-cab"><h2>${titulo}</h2><button class="b-icono" onClick=${cerrar} aria-label="Cerrar"><${Icono} n="x" t=${20}/></button></div>
+      <div class="h-cab"><h2>${titulo}</h2><button class="b-icono" onClick=${cerrar} aria-label=${t('cerrar')}><${Icono} n="x" t=${20}/></button></div>
       <div class="h-cuerpo">${children}</div>
       ${pie && html`<div class="h-pie">${pie}</div>`}
     </div>

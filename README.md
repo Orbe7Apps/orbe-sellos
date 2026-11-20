@@ -8,8 +8,10 @@ Tarjeta de fidelidad de sellos **sin app** para negocios pequeños de cualquier 
 
 | Archivo | Qué es |
 |---|---|
-| `index.html` + `js/negocio.js` | App del negocio: crear la tarjeta, sellar, entregar premios, clientes, cartel con QR |
-| `t.html` + `js/cliente.js` | Tarjeta del cliente (español, inglés y portugués) |
+| `index.html` + `js/negocio.js` | App del negocio: crear la tarjeta, sellar, entregar premios, clientes, cartel con QR (textos en `js/textos-negocio.js`) |
+| `t.html` + `js/cliente.js` | Tarjeta del cliente (textos en `js/textos.js`) |
+
+Todo está en español, inglés y portugués, según el idioma del teléfono. Para probar otro idioma: `?lang=en` o `?lang=pt`.
 | `js/datos.js` | Reglas de los sellos. Hoy en **modo demostración**: todo se guarda en el aparato |
 | `js/config.js` | Conexión a la base de datos (vacía = modo demostración) |
 | `supabase/esquema.sql` | Esquema de la base en Supabase, listo pero sin conectar |
