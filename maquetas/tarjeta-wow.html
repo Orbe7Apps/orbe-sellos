@@ -28,9 +28,11 @@
     position: relative; aspect-ratio: 1.586; border-radius: var(--radio); transform-style: preserve-3d;
     transform: rotateX(calc(var(--rx) * 1deg)) rotateY(calc(var(--ry) * 1deg + var(--vuelta) * 1deg));
     transition: transform .08s linear; will-change: transform; }
-  .cara { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  .cara { position: absolute; inset: 0; border-radius: inherit; overflow: hidden;
     box-shadow: 0 calc(18px + var(--rx) * -.6px) 40px -14px rgba(0,0,0,.55), 0 2px 4px rgba(0,0,0,.2); }
   .dorso { transform: rotateY(180deg); }
+  /* Qué cara se ve (no depende solo de backface-visibility, que falla con animaciones en algunos navegadores) */
+  .carta.girada .frente, .carta:not(.girada) .dorso { visibility: hidden; }
   .fondo { position: absolute; inset: 0; background: linear-gradient(var(--grad), var(--c1), var(--c2)); }
   .patron { position: absolute; inset: 0; opacity: .9; }
   .p-lisa { display: none; }
@@ -63,6 +65,30 @@
     filter: drop-shadow(0 1px 0 rgba(255,255,255,.9)) drop-shadow(0 -1px 0 rgba(0,0,0,.55)); }
   .sello.si::after { content: ''; position: absolute; inset: 0; border-radius: inherit;
     background: radial-gradient(circle at calc(var(--mx) * 1%) calc(var(--my) * 1%), rgba(255,255,255,.85), transparent 45%); mix-blend-mode: overlay; }
+  /* Modelos de sellos */
+  .sello.si .capa { position: absolute; border-radius: inherit; }
+  .m-moneda .sello.si .capa { inset: 0; background: repeating-conic-gradient(rgba(0,0,0,.5) 0 3deg, rgba(255,255,255,.5) 3deg 6deg);
+    -webkit-mask: radial-gradient(circle, transparent 60%, #000 62%); mask: radial-gradient(circle, transparent 60%, #000 62%); }
+  .m-moneda .sello.si::before { content: ''; position: absolute; inset: 22%; border-radius: 50%; box-shadow: 0 0 0 1.5px rgba(0,0,0,.3), 0 0 0 2.5px rgba(255,255,255,.6); }
+  .m-moneda .sello.si .marca { inset: 25%; }
+  .m-esmalte .sello.si .capa { inset: 13%; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--cs) 55%, #fff), var(--cs) 55%, color-mix(in srgb, var(--cs) 70%, #000)); box-shadow: inset 0 1px 3px rgba(0,0,0,.45); }
+  .m-esmalte .sello.si .marca { inset: 26%; background: conic-gradient(from calc(var(--ang) * -1.4deg + 180deg), var(--metal)); }
+  .m-gema .sello.si { background: conic-gradient(from calc(var(--ang) * 1.5deg + var(--i) * 40deg), color-mix(in srgb, var(--cs) 40%, #fff) 0 45deg, var(--cs) 0 90deg, color-mix(in srgb, var(--cs) 65%, #000) 0 135deg, color-mix(in srgb, var(--cs) 70%, #fff) 0 180deg, color-mix(in srgb, var(--cs) 80%, #000) 0 225deg, color-mix(in srgb, var(--cs) 30%, #fff) 0 270deg, var(--cs) 0 315deg, color-mix(in srgb, var(--cs) 50%, #000) 0); }
+  .m-gema .sello.si .marca { background: linear-gradient(rgba(255,255,255,.85), rgba(255,255,255,.55)); }
+  .m-lacre .sello.si, .m-lacre .sello.hueco { clip-path: none; border-radius: 52% 48% 55% 45% / 47% 53% 47% 53%; }
+  .m-lacre .sello.si { background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--cs) 60%, #fff), var(--cs) 45%, color-mix(in srgb, var(--cs) 60%, #000)); box-shadow: 0 3px 6px rgba(0,0,0,.45), inset 0 0 0 3px color-mix(in srgb, var(--cs) 80%, #000); }
+  .m-lacre .sello.si .marca { background: color-mix(in srgb, var(--cs) 55%, #000); filter: drop-shadow(0 1px 0 rgba(255,255,255,.4)) drop-shadow(0 -1px 0 rgba(0,0,0,.5)); }
+  .m-neon .sello.si, .m-neon .sello.hueco { clip-path: none; }
+  .m-neon .sello.si { background: rgba(0,0,0,.35); box-shadow: 0 0 0 2px var(--cs), 0 0 10px var(--cs), inset 0 0 10px color-mix(in srgb, var(--cs) 60%, transparent); }
+  .m-neon .sello.si .marca { background: color-mix(in srgb, var(--cs) 40%, #fff); filter: drop-shadow(0 0 3px var(--cs)) drop-shadow(0 0 6px var(--cs)); }
+  .m-vidrio .sello.si { background: linear-gradient(140deg, rgba(255,255,255,.55), rgba(255,255,255,.12) 50%, rgba(255,255,255,.3)); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); box-shadow: 0 4px 10px rgba(0,0,0,.25), inset 0 0 0 1.5px rgba(255,255,255,.7); }
+  .m-vidrio .sello.si .marca { background: #fff; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+  .m-sticker .sello.si { background: conic-gradient(from calc(var(--ang) * 3deg + var(--i) * 50deg), #ff9ab0, #ffe08a, #a6ffcb, #8ad8ff, #c9a6ff, #ff9ab0); box-shadow: 0 2px 5px rgba(0,0,0,.35), inset 0 0 0 3px #fff; }
+  .m-sticker .sello.si .marca { background: #17142b; filter: none; opacity: .85; }
+  .m-pixel .sello.si, .m-pixel .sello.hueco { border-radius: 0; clip-path: polygon(30% 0,70% 0,70% 10%,90% 10%,90% 30%,100% 30%,100% 70%,90% 70%,90% 90%,70% 90%,70% 100%,30% 100%,30% 90%,10% 90%,10% 70%,0 70%,0 30%,10% 30%,10% 10%,30% 10%); }
+  .m-pixel .sello.si { background: var(--cs); box-shadow: inset -4px -4px 0 color-mix(in srgb, var(--cs) 60%, #000), inset 4px 4px 0 color-mix(in srgb, var(--cs) 50%, #fff); }
+  .m-pixel .sello.si::after { display: none; }
+  .m-pixel .sello.si .marca { inset: 24%; background: #fff; filter: drop-shadow(2px 2px 0 rgba(0,0,0,.4)); }
   .sello.nuevo { animation: estampa .6s var(--bounce) both; }
   .sello.nuevo::before { content: ''; position: absolute; inset: 0; z-index: 2; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.95) 50%, transparent 70%) -150% 0 / 250% 100% no-repeat; animation: destello .9s .25s ease-out both; }
   @keyframes destello { to { background-position: 150% 0; } }
@@ -74,7 +100,18 @@
     mix-blend-mode: color-dodge; filter: brightness(.5) contrast(1.6) saturate(1.2); opacity: calc(var(--holo) * var(--fuerza) * .75); }
   .acabado-cromo .holo { background-image: repeating-linear-gradient(115deg, #fff 0%, #8d95a0 7%, #fff 12%, #5d6570 19%, #fff 26%); mix-blend-mode: overlay; filter: none; }
   .acabado-oro .holo { background-image: repeating-linear-gradient(115deg, #fff3c4 0%, #b8862a 7%, #fff6cf 12%, #8a5d10 19%, #fff3c4 26%); mix-blend-mode: overlay; filter: none; }
-  .acabado-mate .holo { display: none; }
+    .acabado-mate .holo { display: none; }
+  /* Más fondos holográficos */
+  .acabado-prisma .holo { background-image: repeating-linear-gradient(60deg, #ff6f91 0 7%, #ffc75f 7% 14%, #f9f871 14% 21%, #8dffb0 21% 28%, #6bd6ff 28% 35%, #a98bff 35% 42%); background-size: 300% 300%; }
+  .acabado-galaxia .holo { background-image: radial-gradient(35% 45% at 25% 30%, #a98bff, transparent 70%), radial-gradient(40% 50% at 75% 65%, #ff6fd8, transparent 70%), radial-gradient(30% 40% at 60% 20%, #6bd6ff, transparent 70%), radial-gradient(35% 45% at 30% 80%, #8dffb0, transparent 70%); background-size: 160% 160%; }
+  .acabado-galaxia .chispas { background-size: 110px; opacity: calc(var(--holo) * (var(--fuerza) + .4)); }
+  .acabado-aurora .holo { background-image: linear-gradient(170deg, transparent 20%, #6bffd8 35%, transparent 50%, #a98bff 62%, transparent 75%, #ff8ad8 88%, transparent); background-size: 220% 220%; filter: brightness(.6) contrast(1.3) saturate(1.4) blur(2px); }
+  .acabado-laser .holo { background-image: repeating-conic-gradient(from calc(var(--ang) * 1deg) at 50% 50%, #ff6f91 0 2deg, #ffc75f 2deg 4deg, #8dffb0 4deg 6deg, #6bd6ff 6deg 8deg, #a98bff 8deg 10deg); background-size: 100% 100%; background-position: center; }
+  .acabado-escamas .holo { -webkit-mask: radial-gradient(circle at 50% 0, #000 42%, transparent 46%, transparent 54%, #000 58%) 0 0 / 22px 18px; mask: radial-gradient(circle at 50% 0, #000 42%, transparent 46%, transparent 54%, #000 58%) 0 0 / 22px 18px; opacity: calc(var(--holo) * (var(--fuerza) + .25)); }
+  .acabado-cristal .holo { background-image: conic-gradient(from calc(var(--ang) * 1deg) at 30% 35%, #ff6f91 0 40deg, #6bd6ff 0 95deg, #f9f871 0 150deg, #a98bff 0 210deg, #8dffb0 0 270deg, #ffc75f 0 320deg, #ff6f91 0), conic-gradient(from calc(var(--ang) * -1deg + 30deg) at 72% 70%, #6bd6ff 0 60deg, #ff6f91 0 130deg, #8dffb0 0 200deg, #a98bff 0 280deg, #f9f871 0); background-size: 100% 100%; background-blend-mode: difference; }
+  .acabado-confeti .holo { background-image: radial-gradient(circle, #ff6f91 0 2.2px, transparent 2.6px), radial-gradient(circle, #6bd6ff 0 2.2px, transparent 2.6px), radial-gradient(circle, #f9f871 0 1.8px, transparent 2.2px), radial-gradient(circle, #8dffb0 0 2px, transparent 2.4px);
+    background-size: 23px 23px, 31px 31px, 17px 17px, 27px 27px; background-position: calc(var(--mx) * .3px) calc(var(--my) * .3px), calc(var(--mx) * -.4px) 5px, 7px calc(var(--my) * -.5px), 11px 13px; filter: brightness(.8) saturate(1.4); }
+  .acabado-ondas .holo { background-image: repeating-radial-gradient(circle at calc(var(--mx) * 1%) calc(var(--my) * 1%), #ff6f91 0 6px, #ffc75f 6px 12px, #8dffb0 12px 18px, #6bd6ff 18px 24px, #a98bff 24px 30px); background-size: 100% 100%; background-position: center; }
   .chispas { background-image: var(--ruido); background-size: 220px; background-position: calc(var(--mx) * -1.5px) calc(var(--my) * -1.5px);
     mix-blend-mode: color-dodge; opacity: calc(var(--holo) * var(--fuerza) * .9); }
   .acabado-mate .chispas, .acabado-cromo .chispas { opacity: calc(var(--holo) * var(--fuerza) * .35); }
@@ -89,8 +126,9 @@
   /* Dorso */
   .dorso .contenido { align-items: center; justify-content: center; text-align: center; gap: 6px; }
   .dorso .c-logo { height: 30px; }
-  .dorso .qr { width: 34%; border-radius: 10px; background: #fff; padding: 6px; box-shadow: 0 4px 12px rgba(0,0,0,.3); }
-  .dorso b { font-size: 26px; letter-spacing: .2em; font-family: ui-monospace, Menlo, monospace; }
+  .dorso .qr { width: 30%; border-radius: 10px; background: #fff; padding: 6px; box-shadow: 0 4px 12px rgba(0,0,0,.3); }
+  .dorso .codigo { font: 800 24px/1 ui-monospace, Menlo, monospace; letter-spacing: .2em; padding: 8px 10px 8px 16px; border-radius: 12px; background: #fff; color: #17142b; box-shadow: 0 4px 12px rgba(0,0,0,.3); }
+  .dorso small { font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,.2); }
 
   .acciones { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
   .acciones .b-sec { min-height: 40px; font-size: 14px; }
@@ -140,7 +178,7 @@
         </div>
         <div class="cara dorso">
           <div class="fondo"></div><div class="patron" id="patron2"></div>
-          <div class="contenido"><img class="c-logo" id="cLogo2" alt=""><div id="qr"></div><b>K7Q2</b><small>Muestra este código al pagar</small></div>
+          <div class="contenido"><img class="c-logo" id="cLogo2" alt=""><div id="qr"></div><b class="codigo">K7Q2</b><small>Muestra este código al pagar</small></div>
           <div class="holo"></div><div class="chispas"></div><div class="reflejo"></div><div class="marco-cromo"></div>
         </div>
       </div>
@@ -198,7 +236,10 @@
 
     <div class="caja">
       <h2>Sellos</h2>
-      <span class="etq" style="margin:0">Metal</span>
+      <span class="etq" style="margin:0">Modelo</span>
+      <div class="chips" id="modelos"></div>
+      <div class="fila-col"><label>Color de los sellos <input type="color" id="cs"></label><small class="muted">para Esmalte, Gema, Lacre, Neón y Pixel</small></div>
+      <span class="etq" style="margin:4px 0 0">Metal</span>
       <div class="chips" id="metales"></div>
       <span class="etq" style="margin:4px 0 0">Forma</span>
       <div class="chips" id="formas"></div>
@@ -227,24 +268,31 @@ const METALES = {
   arcoiris:{ n: 'Arcoíris', m: '#ff9ab0, #ffe08a, #a6ffcb, #8ad8ff, #c9a6ff, #ff9ab0, #fff, #8ad8ff, #ff9ab0' },
   negro:   { n: 'Negro',    m: '#6b6b70, #111114, #9a9aa0, #000, #5a5a60, #1c1c20, #8a8a90, #0a0a0c, #6b6b70' }
 };
-const ACABADOS = { holo: 'Holográfico', cromo: 'Cromo', oro: 'Dorado', mate: 'Mate' };
+const ACABADOS = { holo: 'Arcoíris', prisma: 'Prisma', galaxia: 'Galaxia', aurora: 'Aurora', laser: 'Láser', escamas: 'Escamas', cristal: 'Cristal', confeti: 'Confeti', ondas: 'Ondas', cromo: 'Cromo', oro: 'Dorado', mate: 'Mate' };
+const MODELOS = { clasico: 'Cromado', moneda: 'Moneda', esmalte: 'Esmalte', gema: 'Gema', lacre: 'Lacre', neon: 'Neón', vidrio: 'Vidrio', sticker: 'Sticker holo', pixel: 'Pixel' };
+// Texto claro u oscuro según qué tan claro es el fondo (si está en Automático).
+const luz = hex => { const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map(v => { v /= 255; return v <= .04 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+const tintaOscura = () => e.tinta === 'auto' ? (luz(e.c1) + luz(e.c2)) / 2 > .4 : e.tinta === 'oscura';
 const PATRONES = { lisa: 'Lisa', rayos: 'Rayos', rayas: 'Rayas', puntos: 'Puntos', rombos: 'Rombos', ondas: 'Ondas' };
 const FORMAS = {
   circulo:  { n: 'Círculo',  r: '50%', c: 'none' },
   hexagono: { n: 'Hexágono', r: '0',   c: 'polygon(25% 4%, 75% 4%, 100% 50%, 75% 96%, 25% 96%, 0 50%)' },
   escudo:   { n: 'Escudo',   r: '0',   c: 'polygon(50% 0, 100% 14%, 92% 66%, 50% 100%, 8% 66%, 0 14%)' },
   cuadro:   { n: 'Cuadrado', r: '28%', c: 'none' },
+  octagono: { n: 'Octágono', r: '0',   c: 'polygon(30% 2%, 70% 2%, 98% 30%, 98% 70%, 70% 98%, 30% 98%, 2% 70%, 2% 30%)' },
+  diamante: { n: 'Diamante', r: '0',   c: 'polygon(50% 0, 100% 50%, 50% 100%, 0 50%)' },
+  flor:     { n: 'Flor',     r: '0',   c: 'polygon(50% 0, 61% 26%, 85% 15%, 74% 39%, 100% 50%, 74% 61%, 85% 85%, 61% 74%, 50% 100%, 39% 74%, 15% 85%, 26% 61%, 0 50%, 26% 39%, 15% 15%, 39% 26%)' },
   estrella: { n: 'Estrella', r: '0',   c: 'polygon(50% 0, 62% 33%, 98% 36%, 70% 58%, 80% 94%, 50% 74%, 20% 94%, 30% 58%, 2% 36%, 38% 33%)' }
 };
 const LETRAS = { inter: ['Moderna', 'Inter, sans-serif'], fraunces: ['Clásica', 'Fraunces, Georgia, serif'], grotesk: ['Técnica', '"Space Grotesk", sans-serif'], baloo: ['Divertida', '"Baloo 2", sans-serif'] };
-const PALETAS = [['#3b1f0f', '#b5733f'], ['#1a1733', '#6a5cf2'], ['#0b3d2e', '#2fbf8f'], ['#5b0f2e', '#ff5c8a'], ['#0d2b4a', '#2f9ee0'], ['#111', '#555'], ['#f6e7c8', '#d9a95b'], ['#fdfdfd', '#c9cfd8']];
+const PALETAS = [['#0a0a0a', '#2b2b2b'], ['#3b1f0f', '#b5733f'], ['#1a1733', '#6a5cf2'], ['#0b3d2e', '#2fbf8f'], ['#5b0f2e', '#ff5c8a'], ['#0d2b4a', '#2f9ee0'], ['#111', '#555'], ['#f6e7c8', '#d9a95b'], ['#fdfdfd', '#c9cfd8']];
 const REGALO = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16v9.5H4zM3 7h18v4H3zM12 7v13.5M12 7c-1.5-4-6-4-5.5-.5M12 7c1.5-4 6-4 5.5-.5"/></svg>');
 const logoDemo = color => 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="29" fill="none" stroke="#fff" stroke-width="4"/><path d="M17 25h26v9a11 11 0 0 1-11 11h-4a11 11 0 0 1-11-11z" fill="#fff"/><path d="M43 28h3a5 5 0 0 1 0 10h-3" fill="none" stroke="#fff" stroke-width="4"/><path d="M25 13c-2 3 2 5 0 8M32 13c-2 3 2 5 0 8M39 13c-2 3 2 5 0 8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>'.replaceAll('#fff', color));
 const LOGO_DEMO = logoDemo('#fff');
 const ICONO_SELLO = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5L2.6 9.3l6.5-.9z" fill="#000"/></svg>');
 const RUIDO = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="7"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 14 -10"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>');
 
-const e = { demo: true, logo: LOGO_DEMO, dibujo: 'logo', nombre: 'Café Luna', premio: 'Café gratis', letra: 'inter', tinta: 'clara', c1: '#3b1f0f', c2: '#b5733f', grad: 135,
+const e = { demo: true, logo: LOGO_DEMO, dibujo: 'logo', nombre: 'Café Luna', premio: 'Café gratis', letra: 'inter', tinta: 'auto', c1: '#3b1f0f', c2: '#b5733f', cs: '#e8436a', modelo: 'clasico', grad: 135,
   acabado: 'holo', holo: 70, patron: 'rayos', metal: 'plata', forma: 'circulo', meta: 10, sellos: 6, radio: 24 };
 
 // ---------- Pintar ----------
@@ -263,7 +311,7 @@ function pintarSellos(nuevo = -1) {
   cont.style.gridTemplateColumns = `repeat(${cols}, 1fr)`; cont.style.setProperty('--cols', cols);
   for (let i = 0; i < e.meta; i++) {
     const s = document.createElement('span'); s.style.setProperty('--i', i);
-    if (i < e.sellos) { s.className = 'sello si' + (i === nuevo ? ' nuevo' : ''); s.innerHTML = '<span class="marca"></span>'; }
+    if (i < e.sellos) { s.className = 'sello si' + (i === nuevo ? ' nuevo' : ''); s.innerHTML = '<span class="capa"></span><span class="marca"></span>'; }
     else s.className = 'sello hueco' + (i === e.meta - 1 ? ' premio' : '');
     cont.appendChild(s);
   }
@@ -273,34 +321,38 @@ function pintarSellos(nuevo = -1) {
 }
 function pintarTodo() {
   const f = FORMAS[e.forma];
-  if (e.demo) e.logo = logoDemo(e.tinta === 'oscura' ? '#17142b' : '#fff');
+  const oscura = tintaOscura();
+  if (e.demo) e.logo = logoDemo(oscura ? '#17142b' : '#fff');
   const v = { '--c1': e.c1, '--c2': e.c2, '--grad': e.grad + 'deg', '--holo': e.holo / 100, '--radio': e.radio + 'px', '--metal': METALES[e.metal].m,
-    '--forma-radio': f.r, '--forma-clip': f.c, '--letra': LETRAS[e.letra][1], '--tinta': e.tinta === 'clara' ? '#fff' : '#17142b',
+    '--forma-radio': f.r, '--forma-clip': f.c, '--letra': LETRAS[e.letra][1], '--tinta': oscura ? '#17142b' : '#fff', '--cs': e.cs,
     '--logo-sello': `url("${e.dibujo === 'logo' ? e.logo : ICONO_SELLO}")`, '--regalo': `url("${REGALO}")`, '--ruido': `url("${RUIDO}")` };
   for (const k in v) raiz.style.setProperty(k, v[k]);
-  carta.className = 'carta acabado-' + e.acabado + (e.tinta === 'oscura' ? ' tinta-oscura' : '') + (e.sellos >= e.meta ? ' lista' : '');
+  carta.className = (act.v > 90 ? 'girada ' : '') + 'carta acabado-' + e.acabado + (oscura ? ' tinta-oscura' : '') + (e.sellos >= e.meta ? ' lista' : '');
   $('patron').className = $('patron2').className = 'patron p-' + e.patron;
   $('cLogo').src = $('cLogo2').src = $('logoPrev').src = e.logo;
   $('cNombre').textContent = e.nombre; $('cPremio').textContent = e.premio;
   $('c1').value = e.c1; $('c2').value = e.c2;
   chips('dibujoSello', { logo: 'Mi logo en los sellos', icono: 'Estrella en los sellos' }, 'dibujo');
   chips('letras', LETRAS, 'letra');
-  chips('tintas', { clara: 'Claro', oscura: 'Oscuro' }, 'tinta');
+  chips('tintas', { auto: 'Automático', clara: 'Claro', oscura: 'Oscuro' }, 'tinta');
+  chips('modelos', MODELOS, 'modelo');
+  $('sellos').className = 'sellos m-' + e.modelo; $('cs').value = e.cs;
   chips('acabados', ACABADOS, 'acabado');
   chips('patrones', PATRONES, 'patron');
   chips('metales', METALES, 'metal', (k, m) => `<span class="metal-chip" style="--m:${m.m}"></span>`);
   chips('formas', FORMAS, 'forma');
   chips('cantidades', { 6: '6', 8: '8', 10: '10', 12: '12' }, 'meta');
   const pal = $('paletas'); pal.innerHTML = '';
-  for (const [a, b] of PALETAS) { const x = document.createElement('button'); x.style.cssText = `--a:${a};--b:${b}`; x.className = e.c1 === a && e.c2 === b ? 'si' : ''; x.setAttribute('aria-label', 'Colores'); x.onclick = () => { e.c1 = a; e.c2 = b; e.tinta = /^#f/.test(a) ? 'oscura' : 'clara'; pintarTodo(); }; pal.appendChild(x); }
+  for (const [a, b] of PALETAS) { const x = document.createElement('button'); x.style.cssText = `--a:${a};--b:${b}`; x.className = e.c1 === a && e.c2 === b ? 'si' : ''; x.setAttribute('aria-label', 'Colores'); x.onclick = () => { e.c1 = a; e.c2 = b; e.tinta = 'auto'; pintarTodo(); }; pal.appendChild(x); }
   pintarSellos();
 }
 
 // ---------- Controles ----------
 $('iNombre').oninput = ev => { e.nombre = ev.target.value; $('cNombre').textContent = e.nombre; };
 $('iPremio').oninput = ev => { e.premio = ev.target.value; $('cPremio').textContent = e.premio; };
-$('c1').oninput = ev => { e.c1 = ev.target.value; raiz.style.setProperty('--c1', e.c1); };
-$('c2').oninput = ev => { e.c2 = ev.target.value; raiz.style.setProperty('--c2', e.c2); };
+$('c1').oninput = ev => { e.c1 = ev.target.value; pintarTodo(); };
+$('c2').oninput = ev => { e.c2 = ev.target.value; pintarTodo(); };
+$('cs').oninput = ev => { e.cs = ev.target.value; raiz.style.setProperty('--cs', e.cs); };
 $('grad').oninput = ev => { e.grad = +ev.target.value; raiz.style.setProperty('--grad', e.grad + 'deg'); };
 $('holo').oninput = ev => { e.holo = +ev.target.value; raiz.style.setProperty('--holo', e.holo / 100); };
 $('radio').oninput = ev => { e.radio = +ev.target.value; raiz.style.setProperty('--radio', e.radio + 'px'); };
@@ -360,6 +412,7 @@ function cuadro() {
   if (golpe > .01) { rx += golpe * 6; golpe *= .88; }
   const dist = Math.min(1, Math.hypot(mx - 50, my - 50) / 50);
   const s = carta.style;
+  const girada = act.v > 90; if (carta.classList.contains('girada') !== girada) carta.classList.toggle('girada', girada);
   s.setProperty('--rx', rx.toFixed(2)); s.setProperty('--ry', ry.toFixed(2)); s.setProperty('--vuelta', act.v.toFixed(2));
   s.setProperty('--mx', mx.toFixed(1)); s.setProperty('--my', my.toFixed(1));
   s.setProperty('--fuerza', (.3 + dist * .7).toFixed(3)); s.setProperty('--ang', (ry * 5 + rx * 4).toFixed(1));
